@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Experience ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    color: white;
+}
+
+.card {
+    background: white;
+    color: black;
+    padding: 40px;
+    border-radius: 20px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 0 30px #ff004c;
+    position: relative;
+    z-index: 10;
+}
+
+h1 {
+    color: #ff004c;
+}
+
+input {
+    padding: 10px;
+    width: 85%;
+    border-radius: 20px;
+    border: 2px solid #ff004c;
+    margin-top: 15px;
+    text-align: center;
+    outline: none;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    background: #ff004c;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: black;
+}
+
+#response {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #ff004c;
+}
+
+.footer {
+    margin-top: 25px;
+    font-size: 12px;
+    color: gray;
+}
+
+/* Floating hearts */
+.heart {
+    position: absolute;
+    font-size: 20px;
+    animation: float 6s linear infinite;
+    opacity: 0.8;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+/* Confetti */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: red;
+    animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(720deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1 id="mainQuestion">What is your name? 💌</h1>
+
+    <input type="text" id="userInput" placeholder="Type here..." />
+    <br>
+    <button id="mainButton" onclick="nextStep()">Continue ❤️</button>
+
+    <div id="response"></div>
+
+    <div class="footer">Coded by Julia Moyo 💕</div>
+
+</div>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/02/23/audio_5e1c1e4e33.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+let step = 1;
+let userName = "";
+
+function nextStep() {
+    const input = document.getElementById("userInput");
+    const response = document.getElementById("response");
+    const question = document.getElementById("mainQuestion");
+    const button = document.getElementById("mainButton");
+    const music = document.getElementById("bgMusic");
+
+    if (step === 1) {
+        userName = input.value;
+
+        if (userName === "") {
+            response.innerHTML = "Don't be shy... tell me your name 😌";
+            return;
+        }
+
+        music.play();
+
+        question.innerHTML = "Hi " + userName + " ❤️ Do you have a Valentine?";
+        input.value = "";
+        input.placeholder = "Yes / No / Maybe";
+        response.innerHTML = "";
+        step = 2;
+    }
+
+    else if (step === 2) {
+        let answer = input.value.toLowerCase();
+
+        createConfetti();
+
+        if (answer === "yes") {
+            response.innerHTML =
+            "That’s so beautiful, " + userName + " 🥰<br><br>" +
+            "Make sure you remind them how special they are today ❤️✨";
+        }
+        else if (answer === "no") {
+            response.innerHTML =
+            userName + ", you are still worthy of flowers and soft love 💕<br><br>" +
+            "Self-love is powerful too 🌹✨";
+        }
+        else {
+            response.innerHTML =
+            userName + ", wherever you are in love — you deserve something genuine ❤️✨";
+        }
+
+        question.innerHTML = "Share this with someone you love 💌";
+        input.style.display = "none";
+        button.innerHTML = "Share ❤️";
+        button.onclick = sharePage;
+        step = 3;
+    }
+}
+
+function sharePage() {
+    if (navigator.share) {
+        navigator.share({
+            title: "Valentine Love ❤️",
+            text: "This made me think of you 💕",
+            url: window.location.href
+        });
+    } else {
+        alert("Copy this link and share it with someone you love 💌");
+    }
+}
+
+/* Floating hearts */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = Math.random() > 0.5 ? "❤️" : "💗";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 15 + "px";
+    heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => { heart.remove(); }, 6000);
+}
+setInterval(createHeart, 500);
+
+/* Confetti */
+function createConfetti() {
+    for (let i = 0; i < 80; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.background = 
+            Math.random() > 0.5 ? "#ff004c" : "pink";
+        confetti.style.animationDuration = Math.random() * 2 + 2 + "s";
+        document.body.appendChild(confetti);
+        setTimeout(() => { confetti.remove(); }, 3000);
+    }
+}
+
+</script>
+
+</body>
+</html>
